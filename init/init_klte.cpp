@@ -39,22 +39,37 @@ void vendor_load_properties()
 {
     std::string bootloader = GetProperty("ro.bootloader", "");
 
+    const auto set_ro_build_prop = [](const std::string &source,
+            const std::string &prop, const std::string &value) {
+        auto prop_name = "ro." + source + "build." + prop;
+        property_override(prop_name.c_str(), value.c_str(), false);
+	
+    };
+    const auto set_ro_product_prop = [](const std::string &source,
+            const std::string &prop, const std::string &value) {
+        auto prop_name = "ro.product." + source + prop;
+        property_override(prop_name.c_str(), value.c_str(), false);
+    };
+
     if (bootloader.find("G900FD") == 0) {
         /* klteduosxx */
-        property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "samsung/klteduosxx/klte:6.0.1/MMB29M/G900FDXXS1CQD2:user/release-keys");
+        for (const auto &source : ro_props_default_source_order) {
+            set_ro_build_prop(source, "fingerprint", "samsung/klteduosxx/klte:6.0.1/MMB29M/G900FDXXS1CQD2:user/release-keys");
+            set_ro_product_prop(source, "device", "klte");
+            set_ro_product_prop(source, "model", "SM-G900FD");
+        }
         property_override("ro.build.description", "klteduosxx-user 6.0.1 MMB29M G900FDXXS1CQD2 release-keys");
-        property_override_dual("ro.product.model", "ro.product.vendor.model", "SM-G900FD");
-        property_override_dual("ro.product.device", "ro.product.vendor.device", "klte");
     } else if (bootloader.find("G900MD") == 0) {
         /* klteduosub */
-        property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "samsung/klteduosub/klte:6.0.1/MMB29M/G900MDUBS1CQD2:user/release-keys");
+        for (const auto &source : ro_props_default_source_order) {
+            set_ro_build_prop(source, "fingerprint", "samsung/klteduosub/klte:6.0.1/MMB29M/G900MDUBS1CQD2:user/release-keys");
+            set_ro_product_prop(source, "device", "klte");
+            set_ro_product_prop(source, "model", "SM-G900MD");
+        }
         property_override("ro.build.description", "klteduosub-user 6.0.1 MMB29M G900MDUBS1CQD2 release-keys");
-        property_override_dual("ro.product.model", "ro.product.vendor.model", "SM-G900MD");
-        property_override_dual("ro.product.device", "ro.product.vendor.device", "klte");
     }
 
     std::string device = GetProperty("ro.product.device", "");
     LOG(ERROR) << "Found bootloader id " << bootloader <<  " setting build properties for "
         << device <<  " device" << std::endl;
 }
-
