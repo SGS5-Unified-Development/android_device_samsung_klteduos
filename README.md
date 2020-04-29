@@ -2,6 +2,8 @@ Copyright 2015 - The CyanogenMod Project
 
 Copyright 2017 - The LineageOS Project
 
+Copyright 2020 - The AospExtended Project
+
 Device configuration for Samsung Galaxy S5 Dual-SIM variants (SM-G900FD, SM-G900MD).
 ========================================
 
